@@ -85,7 +85,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'loan_management.wsgi.application'
+WSGI_APPLICATION = 'gunicorn loan_management.wsgi.application'
 
 
 # Database
