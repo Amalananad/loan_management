@@ -5,9 +5,7 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('loans.urls')),
-    path('api/', include('loans.urls')),  # ✅ Make sure this is correct
+    path('api/', include('loans.urls')),  # ✅ THIS SHOULD BE THE ONLY API PREFIX
 
-    path("api/loans/", include("loans.urls")),  # Ensure it's correctly included
   # Include the loans app URLs
 ]

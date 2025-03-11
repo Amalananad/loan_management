@@ -16,7 +16,8 @@ from datetime import timedelta
 import environ
 env = environ.Env()
 environ.Env.read_env() 
-
+from dotenv import load_dotenv
+load_dotenv()
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 #pip uninstall djangorestframework-simplejwt
@@ -32,7 +33,7 @@ SECRET_KEY = env('django-insecure-^=768rx%48d1cq$@pqis)=^c$fi0!9&)r%g_hc&@#4p1fw
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True 
 
 ALLOWED_HOSTS = []
 
@@ -85,20 +86,23 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'loan_management.wsgi.application'
+WSGI_APPLICATION =  'loan_management.wsgi.application'
 
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / "db.sqlite3",  # This will create a file named db.sqlite3 in your project directory
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'loan_management1',  # Replace with your database name
+        'USER': 'postgres',  # Replace with your PostgreSQL username
+        'PASSWORD': 'appunni0481',  # Replace with your PostgreSQL password
+        'HOST': 'localhost',  # Set to 'localhost' or your database host
+        'PORT': '5433',  # Use the correct port
     }
 }
-
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -155,6 +159,9 @@ SIMPLE_JWT = {
     'ALGORITHM': 'HS256',
     'SIGNING_KEY': 'django-insecure-^=768rx%48d1cq$@pqis)=^c$fi0!9&)r%g_hc&@#4p1fwjbwb',  # Ensure this is set
 }
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
 # Email settings for OTP
 # EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 # EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')

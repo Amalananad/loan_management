@@ -4,6 +4,19 @@ from django.contrib.auth.models import User
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
+
+class LoanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Loan
+        fields = ['user', 'amount', 'tenure', 'interest_rate', 'loan_type', 'purpose', 'collateral']
+
+    def create(self, validated_data):
+        # Create the Loan instance first
+        loan = Loan(**validated_data)
+        loan.save()  # Save to get the pk
+        loan.loan_id = loan.generate_loan_id()  # Generate loan_id
+        loan.save(update_fields=['loan_id'])  # Save the loan_id
+        return loan
 class LoanSerializer(serializers.ModelSerializer):
     monthly_installment = serializers.SerializerMethodField()
     total_interest = serializers.SerializerMethodField()

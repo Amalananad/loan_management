@@ -7,6 +7,37 @@ from django_otp.plugins.otp_email.models import EmailDevice
 from django.contrib.auth.models import User
 from .models import Loan  # Ensure only one Loan model is used
 from .serializers import UserSerializer, LoanSerializer
+from rest_framework.views import APIView
+from decimal import Decimal
+import logging
+
+logger = logging.getLogger(__name__)
+
+# ✅ Loan Repayment View
+class LoanRepaymentView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, loan_id):
+        try:
+            loan = Loan.objects.get(id=loan_id, user=request.user)
+        except Loan.DoesNotExist:
+            return Response({"error": "Loan not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        amount = request.data.get("amount")
+
+        if not amount:
+            return Response({"error": "Amount is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        amount = Decimal(str(amount))
+
+        if amount < loan.monthly_installment:
+            return Response({"error": "Amount is less than the required installment."}, status=status.HTTP_400_BAD_REQUEST)
+
+        loan.amount_paid += amount
+        loan.save()
+
+        return Response({"message": "Installment paid successfully!"}, status=status.HTTP_200_OK)
+
 
 # ✅ User Registration View
 class UserRegisterView(generics.CreateAPIView):
@@ -14,27 +45,24 @@ class UserRegisterView(generics.CreateAPIView):
     serializer_class = UserSerializer
     permission_classes = [permissions.AllowAny]
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+# ✅ User List View
 class UserListView(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
+
 # ✅ Loan List & Create View
 class LoanListCreateView(generics.ListCreateAPIView):
     queryset = Loan.objects.all()
     serializer_class = LoanSerializer
-    permission_classes = [permissions.IsAuthenticated] 
+    permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
-        loan = serializer.save(user=self.request.user)  # Assign logged-in user
+        loan = serializer.save(user=self.request.user)
         response_data = {
             "status": "success",
             "data": {
-                "loan_id": loan.generate_loan_id(),
+                "loan_id": loan.id,
                 "amount": loan.amount,
                 "tenure": loan.tenure,
                 "interest_rate": f"{loan.interest_rate}% yearly",
@@ -43,12 +71,8 @@ class LoanListCreateView(generics.ListCreateAPIView):
                 "total_amount": loan.calculate_total_payable(),
                 "payment_schedule": loan.generate_payment_schedule()
             }
-            
         }
         return Response(response_data, status=status.HTTP_201_CREATED)
-        serializer.save(user=self.request.user)
-
-
 
 # ✅ Loan Detail View
 class LoanDetailView(generics.RetrieveUpdateDestroyAPIView):
@@ -58,6 +82,44 @@ class LoanDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return self.queryset.filter(user=self.request.user)
+
+# ✅ Loan Foreclosure View
+class LoanForeclosureView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, loan_id):
+        logger.info(f"Received foreclosure request for loan_id: {loan_id}")
+
+        try:
+            loan = Loan.objects.get(id=loan_id)
+        except Loan.DoesNotExist:
+            logger.error(f"Loan ID {loan_id} not found.")
+            return Response({"error": "Loan not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        logger.info(f"Foreclosing loan {loan_id}...")
+
+        # Calculate the total amount payable
+        total_amount = Decimal(str(loan.calculate_total_payable()))  # Ensure total_amount is Decimal
+        foreclosure_discount = round(total_amount * Decimal("0.05"), 2)
+        final_settlement_amount = round(total_amount - foreclosure_discount, 2)
+
+
+
+        # Update loan status
+        loan.status = "CLOSED"
+        loan.save()
+
+        return Response({
+            "status": "success",
+            "message": "Loan foreclosed successfully.",
+            "data": {
+                "loan_id": loan.id,
+                "amount_paid": float(loan.amount_paid),
+                "foreclosure_discount": float(foreclosure_discount),
+                "final_settlement_amount": float(final_settlement_amount),
+                "status": "CLOSED"
+            }
+        }, status=status.HTTP_200_OK)
 
 # ✅ Custom Token Views
 class CustomTokenObtainPairView(TokenObtainPairView):
@@ -100,7 +162,7 @@ def add_loan(request):
         return Response({
             "status": "success",
             "data": {
-                "loan_id": loan.generate_loan_id(),
+                "loan_id": loan.id,
                 "amount": amount,
                 "tenure": tenure,
                 "interest_rate": f"{interest_rate}% yearly",
