@@ -35,7 +35,7 @@ SECRET_KEY = env('django-insecure-^=768rx%48d1cq$@pqis)=^c$fi0!9&)r%g_hc&@#4p1fw
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://loan-management-1-12jv.onrender.com']
 
 
 # Application definition
