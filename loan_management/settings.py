@@ -102,14 +102,13 @@ WSGI_APPLICATION =  'loan_management.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'loan_management1',  # Replace with your database name
-        'USER': 'postgres',  # Replace with your PostgreSQL username
-        'PASSWORD': 'appunni0481',  # Replace with your PostgreSQL password
-        'HOST': 'localhost',  # Set to 'localhost' or your database host
-        'PORT': '5433',  # Use the correct port
+        'HOST': os.environ.get('DB_HOST'),  # Set this in Render
+        'NAME': os.environ.get('DB_NAME'),  # Set this in Render
+        'USER': os.environ.get('DB_USER'),  # Set this in Render
+        'PASSWORD': os.environ.get('DB_PASSWORD'),  # Set this in Render
+        'PORT': os.environ.get('DB_PORT', '5432'),  # Default to 5432 if not set
     }
 }
-
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
