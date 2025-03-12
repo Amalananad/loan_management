@@ -35,19 +35,7 @@ ALLOWED_HOSTS = [
 # ==============================
 # 🔹 DATABASE CONFIG (Use PostgreSQL)
 # ==============================
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'loan_management1',
-        'USER': 'postgres',
-        'PASSWORD': 'appunni0481',
-        'HOST': 'localhost',
-        'PORT': '5433',  # Ensure this matches your PostgreSQL port
-    }
-}
-
-DATABASE_URL = os.getenv('postgres://postgres:appunni0481@localhost:5433/loan_management1')
+DATABASE_URL = os.getenv('DATABASE_URL')
 
 DATABASES = {
     'default': dj_database_url.config(
@@ -61,6 +49,7 @@ DATABASES = {
 # ==============================
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 # ==============================
 # 🔹 INSTALLED APPS
@@ -84,7 +73,7 @@ INSTALLED_APPS = [
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],  # Make sure this line exists
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -114,7 +103,7 @@ MIDDLEWARE = [
 # 🔹 ROOT URL CONF & WSGI
 # ==============================
 ROOT_URLCONF = 'loan_management.urls'
-WSGI_APPLICATION = 'loan_management.wsgi.application'  # Added for deployment
+WSGI_APPLICATION = 'loan_management.wsgi.application'
 
 # ==============================
 # 🔹 AUTHENTICATION BACKENDS
@@ -138,7 +127,7 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
     'ALGORITHM': 'HS256',
-    'SIGNING_KEY': SECRET_KEY,  # ✅ Uses the `SECRET_KEY` from env
+    'SIGNING_KEY': SECRET_KEY,
 }
 
 # ==============================
@@ -151,8 +140,8 @@ CSRF_TRUSTED_ORIGINS = [
 # ==============================
 # 🔹 SECURITY HEADERS (Recommended)
 # ==============================
-SECURE_SSL_REDIRECT = False  # Change this from True to False
-SESSION_COOKIE_SECURE = False
-CSRF_COOKIE_SECURE = False  # Secure CSRF cookie
-SECURE_BROWSER_XSS_FILTER = False  # XSS protection
-SECURE_CONTENT_TYPE_NOSNIFF = False  # Prevent MIME-sniffing
+SECURE_SSL_REDIRECT = os.getenv('SECURE_SSL_REDIRECT', 'False') == 'True'
+SESSION_COOKIE_SECURE = os.getenv('SESSION_COOKIE_SECURE', 'False') == 'True'
+CSRF_COOKIE_SECURE = os.getenv('CSRF_COOKIE_SECURE', 'False') == 'True'
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
