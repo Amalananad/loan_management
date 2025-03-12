@@ -21,7 +21,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'your-default-secret-key')
 # ==============================
 # 🔹 DEBUG MODE (Set False in Production)
 # ==============================
-DEBUG = os.getenv('DEBUG', 'False') == 'True'
+DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 
 # ==============================
 # 🔹 ALLOWED HOSTS
@@ -32,9 +32,16 @@ ALLOWED_HOSTS = [
     "loan-management-1-12jv.onrender.com",
 ]
 
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(' ') if not DEBUG else []
+
+
 # ==============================
 # 🔹 DATABASE CONFIG (Use PostgreSQL)
 # ==============================
+DATABASES = {
+    'default': dj_database_url.parse(os.environ.get('DATABASE_URL', ''))
+}
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -99,6 +106,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+
 ]
 
 # ==============================
