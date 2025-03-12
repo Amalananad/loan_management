@@ -30,6 +30,8 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     "loan-management-1-12jv.onrender.com",
 ]
+#DATABASE_URL = os.getenv('60dd8e0ac7447ff28d638a817e64fd6d')  # Make sure this is set in Render's environment variables
+
 
 #ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(' ') if not DEBUG else []
 
@@ -37,10 +39,15 @@ ALLOWED_HOSTS = [
 # ==============================
 # 🔹 DATABASE CONFIG (Use PostgreSQL)
 # ==============================
-DATABASES = {
-    'default': dj_database_url.parse(os.environ.get('DATABASE_URL', ''))
-}
+#DATABASES = {
+DATABASE_URL = os.getenv('DATABASE_URL')  # The key should be 'DATABASE_URL'
 
+DATABASES = {
+    'default': dj_database_url.config(
+        default=DATABASE_URL,
+        conn_max_age=600  # Keeps database connections open for performance
+    )
+}
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
