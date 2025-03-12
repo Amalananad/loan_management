@@ -14,6 +14,7 @@ urlpatterns = [
     path('token/refresh/', CustomTokenRefreshView.as_view(), name='token_refresh'),
     path('verify-otp/', VerifyOTPView.as_view(), name='verify_otp'),
     path('', LoanListView.as_view(), name='loan-list'),  # ✅ Ensure at least one valid route exists
+    path('loans/', LoanListView.as_view(), name='loan-list'),
 
     # Loan Routes
     path('loans/', LoanListCreateView.as_view(), name='loan-list-create'),
