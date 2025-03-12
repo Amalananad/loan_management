@@ -10,7 +10,7 @@ from .views import (
     add_loan,
     UserListView,
     LoanForeclosureView,
-    LoanListView,
+    LoanListView,TokenObtainPairView, TokenRefreshView
 )
 
 urlpatterns = [
@@ -19,6 +19,8 @@ urlpatterns = [
     path('login/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', CustomTokenRefreshView.as_view(), name='token_refresh'),
     path('verify-otp/', VerifyOTPView.as_view(), name='verify_otp'),
+    path('api/login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
     # Loan Routes
     path('loans/', LoanListCreateView.as_view(), name='loan-list-create'),  # Create and list loans

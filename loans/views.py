@@ -12,6 +12,10 @@ from decimal import Decimal
 import logging
 
 logger = logging.getLogger(__name__)
+
+
+class CustomLoginView(TokenObtainPairView):
+    pass  #
 class LoanSerializer(serializers.ModelSerializer):
     class Meta:
         model = Loan
