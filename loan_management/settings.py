@@ -40,24 +40,23 @@ ALLOWED_HOSTS = [
 # 🔹 DATABASE CONFIG (Use PostgreSQL)
 # ==============================
 #DATABASES = {
-DATABASE_URL = os.getenv('DATABASE_URL')  # The key should be 'DATABASE_URL'
-
+DATABASE_URL = os.getenv('DATABASE_URL','postgresql://postgres1:Li5PeUNDdX0ByaHTqyPXHPzE1I9MQrMg@dpg-cv8q6pt2ng1s73cbngh0-a/loan_management_gm14')
 DATABASES = {
     'default': dj_database_url.config(
         default=DATABASE_URL,
         conn_max_age=600  # Keeps database connections open for performance
     )
 }
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'loan_management1',
-        'USER': 'postgres',
-        'PASSWORD': 'appunni0481',
-        'HOST': 'localhost',
-        'PORT': '5433',  # Make sure this matches your PostgreSQL port
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'loan_management1',
+#         'USER': 'postgres',
+#         'PASSWORD': 'appunni0481',
+#         'HOST': 'localhost',
+#         'PORT': '5433',  # Make sure this matches your PostgreSQL port
+#     }
+# }
 
 # ==============================
 # 🔹 STATIC FILES
