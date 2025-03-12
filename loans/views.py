@@ -1,4 +1,4 @@
-from rest_framework import generics, permissions, status
+from rest_framework import generics, permissions, status,serializers
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -12,7 +12,14 @@ from decimal import Decimal
 import logging
 
 logger = logging.getLogger(__name__)
+class LoanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Loan
+        fields = ['id', 'user', 'amount', 'tenure', 'interest_rate']  # Include all necessary fields
 
+    def validate(self, data):
+        # Add custom validation if needed
+        return data
 # Custom Token Views
 class CustomTokenObtainPairView(TokenObtainPairView):
     permission_classes = [permissions.AllowAny]
