@@ -44,7 +44,9 @@ DATABASE_URL = os.getenv('DATABASE_URL','postgresql://postgres1:Li5PeUNDdX0ByaHT
 DATABASES = {
     'default': dj_database_url.config(
         default=DATABASE_URL,
-        conn_max_age=600  # Keeps database connections open for performance
+        conn_max_age=600 ,
+        ssl_require=False  # Ensure SSL is required for Render DB
+ # Keeps database connections open for performance
     )
 }
 # DATABASES = {
