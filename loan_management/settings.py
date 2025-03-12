@@ -21,8 +21,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'your-default-secret-key')
 # ==============================
 # 🔹 DEBUG MODE (Set False in Production)
 # ==============================
-DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
-
+DEBUG = True
 # ==============================
 # 🔹 ALLOWED HOSTS
 # ==============================
@@ -58,7 +57,7 @@ DATABASES = {
 # ==============================
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+# STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 # ==============================
 # 🔹 INSTALLED APPS
@@ -82,7 +81,7 @@ INSTALLED_APPS = [
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -94,7 +93,6 @@ TEMPLATES = [
         },
     },
 ]
-
 # ==============================
 # 🔹 MIDDLEWARE
 # ==============================

@@ -32,4 +32,6 @@ urlpatterns = [
 
     # Root API Endpoint
     path('', LoanListView.as_view(), name='loan-list'),  # Default route for loan listing
+    path("api/loans/", LoanListCreateView.as_view(), name="loan-list-create"),
+
 ]
