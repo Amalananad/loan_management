@@ -35,13 +35,15 @@ ALLOWED_HOSTS = [
 # ==============================
 # 🔹 DATABASE CONFIG (Use PostgreSQL)
 # ==============================
-DATABASE_URL = os.getenv('DATABASE_URL')
-
 DATABASES = {
-    'default': dj_database_url.config(
-        default=DATABASE_URL,
-        conn_max_age=600,  # Optimized database connections
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'loan_management1',
+        'USER': 'postgres',
+        'PASSWORD': 'appunni0481',
+        'HOST': 'localhost',
+        'PORT': '5433',  # Make sure this matches your PostgreSQL port
+    }
 }
 
 # ==============================
@@ -127,7 +129,7 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
     'ALGORITHM': 'HS256',
-    'SIGNING_KEY': SECRET_KEY,
+    #'SIGNING_KEY': SECRET_KEY,
 }
 
 # ==============================
