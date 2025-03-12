@@ -28,9 +28,10 @@ DEBUG = True
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
-    "loan-management-1-12jv.onrender.com",  # ✅ Add this!
+    "loan-management-1-12jv.onrender.com",
 ]
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(' ') if not DEBUG else []
+
+#ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(' ') if not DEBUG else []
 
 
 # ==============================
