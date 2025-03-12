@@ -33,13 +33,16 @@ ALLOWED_HOSTS = ["loan-management-1-12jv.onrender.com"]
 # 🔹 DATABASE CONFIG (Use PostgreSQL)
 # ==============================
 
-DATABASE_URL = os.getenv('DATABASE_URL')
+import os
+import dj_database_url
+
+DATABASE_URL = os.getenv("DATABASE_URL")  # Load DATABASE_URL from Render environment variables
 
 DATABASES = {
-    'default': dj_database_url.config(
+    "default": dj_database_url.config(
         default=DATABASE_URL,
         conn_max_age=600,
-        ssl_require=True  # Ensure SSL is enabled for security on Render
+        ssl_require=True  # Render requires SSL for database connections
     )
 }
 
