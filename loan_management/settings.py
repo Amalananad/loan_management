@@ -4,7 +4,7 @@ Django settings for loan_management project.
 
 from pathlib import Path
 import os
-import dj_database_url  # Import this package
+import dj_database_url  # Import for database config
 from datetime import timedelta
 from dotenv import load_dotenv  # Load environment variables
 
@@ -24,19 +24,36 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'your-default-secret-key')
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 # ==============================
-# 🔹 ALLOWED HOSTS (Fix Render Domain)
+# 🔹 ALLOWED HOSTS
 # ==============================
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
-    "loan-management-1-12jv.onrender.com",  # ✅ Remove "https://"
+    "loan-management-1-12jv.onrender.com",
 ]
 
 # ==============================
-# 🔹 DATABASE CONFIG (Use Render's PostgreSQL)
+# 🔹 DATABASE CONFIG (Use PostgreSQL)
 # ==============================
+
 DATABASES = {
-    'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'loan_management1',
+        'USER': 'postgres',
+        'PASSWORD': 'appunni0481',
+        'HOST': 'localhost',
+        'PORT': '5433',  # Ensure this matches your PostgreSQL port
+    }
+}
+
+DATABASE_URL = os.getenv('DATABASE_URL')
+
+DATABASES = {
+    'default': dj_database_url.config(
+        default=DATABASE_URL,
+        conn_max_age=600,  # Optimized database connections
+    )
 }
 
 # ==============================
@@ -46,7 +63,61 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # ==============================
-# 🔹 AUTHENTICATION
+# 🔹 INSTALLED APPS
+# ==============================
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'loans',
+    'django_extensions',
+    'rest_framework',
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
+    'django_otp',
+    'django_otp.plugins.otp_email',
+]
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],  # Make sure this line exists
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
+# ==============================
+# 🔹 MIDDLEWARE
+# ==============================
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+# ==============================
+# 🔹 ROOT URL CONF & WSGI
+# ==============================
+ROOT_URLCONF = 'loan_management.urls'
+WSGI_APPLICATION = 'loan_management.wsgi.application'  # Added for deployment
+
+# ==============================
+# 🔹 AUTHENTICATION BACKENDS
 # ==============================
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -67,22 +138,21 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
     'ALGORITHM': 'HS256',
-    'SIGNING_KEY': SECRET_KEY,  # ✅ Use the `SECRET_KEY` from env
+    'SIGNING_KEY': SECRET_KEY,  # ✅ Uses the `SECRET_KEY` from env
 }
 
 # ==============================
-# 🔹 CSRF CONFIG (Fix Render Trusted Origins)
+# 🔹 CSRF CONFIG
 # ==============================
 CSRF_TRUSTED_ORIGINS = [
-    "https://loan-management-1-12jv.onrender.com",  # ✅ Keep only domain
+    "https://loan-management-1-12jv.onrender.com",
 ]
 
 # ==============================
 # 🔹 SECURITY HEADERS (Recommended)
 # ==============================
-SECURE_SSL_REDIRECT = True  # Redirect all HTTP requests to HTTPS
-SESSION_COOKIE_SECURE = True  # Use secure cookies
-CSRF_COOKIE_SECURE = True  # Secure CSRF cookie
-SECURE_BROWSER_XSS_FILTER = True  # XSS protection
-SECURE_CONTENT_TYPE_NOSNIFF = True  # Prevent MIME-sniffing
-
+SECURE_SSL_REDIRECT = False  # Change this from True to False
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False  # Secure CSRF cookie
+SECURE_BROWSER_XSS_FILTER = False  # XSS protection
+SECURE_CONTENT_TYPE_NOSNIFF = False  # Prevent MIME-sniffing
