@@ -2,10 +2,10 @@ from django.urls import path
 from .views import (
     UserRegisterView, LoanListCreateView, LoanDetailView,
     LoanRepaymentView, CustomTokenObtainPairView, CustomTokenRefreshView,
-    VerifyOTPView, add_loan, UserListView, LoanForeclosureView
+    VerifyOTPView, add_loan, UserListView, LoanForeclosureView,LoanListView
     
 )
-from .views import LoanListView
+ 
 
 urlpatterns = [
     # Auth Routes
