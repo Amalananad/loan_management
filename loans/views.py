@@ -13,6 +13,10 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    pass  # ✅ 
+
 class LoanListView(generics.ListAPIView):
     queryset = Loan.objects.all()
     serializer_class = LoanSerializer

@@ -2,7 +2,7 @@ from django.urls import path
 from .views import (
     UserRegisterView, LoanListCreateView, LoanDetailView,
     LoanRepaymentView, CustomTokenObtainPairView, CustomTokenRefreshView,
-    VerifyOTPView, add_loan, UserListView, LoanForeclosureView,LoanListView
+    VerifyOTPView, add_loan, UserListView, LoanForeclosureView,LoanListView,CustomTokenObtainPairView
     
 )
  
@@ -24,5 +24,7 @@ urlpatterns = [
 
     # User Routes
     path('users/', UserListView.as_view(), name='user-list'),
+    path('api/login/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
+
 ]
 
