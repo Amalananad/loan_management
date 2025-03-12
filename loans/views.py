@@ -13,6 +13,9 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+class LoanListView(generics.ListAPIView):
+    queryset = Loan.objects.all()
+    serializer_class = LoanSerializer
 # ✅ Loan Repayment View
 class LoanRepaymentView(APIView):
     permission_classes = [IsAuthenticated]

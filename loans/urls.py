@@ -3,7 +3,9 @@ from .views import (
     UserRegisterView, LoanListCreateView, LoanDetailView,
     LoanRepaymentView, CustomTokenObtainPairView, CustomTokenRefreshView,
     VerifyOTPView, add_loan, UserListView, LoanForeclosureView
+    
 )
+from .views import LoanListView
 
 urlpatterns = [
     # Auth Routes
@@ -11,6 +13,7 @@ urlpatterns = [
     path('login/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', CustomTokenRefreshView.as_view(), name='token_refresh'),
     path('verify-otp/', VerifyOTPView.as_view(), name='verify_otp'),
+    path('', LoanListView.as_view(), name='loan-list'),  # ✅ Ensure at least one valid route exists
 
     # Loan Routes
     path('loans/', LoanListCreateView.as_view(), name='loan-list-create'),

@@ -47,7 +47,7 @@ DATABASES = {
     }
 }
 
-DATABASE_URL = os.getenv('DATABASE_URL')
+DATABASE_URL = os.getenv('postgres://postgres:appunni0481@localhost:5433/loan_management1')
 
 DATABASES = {
     'default': dj_database_url.config(
