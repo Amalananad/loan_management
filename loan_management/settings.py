@@ -4,7 +4,7 @@ Django settings for loan_management project.
 
 from pathlib import Path
 import os
-import dj_database_url  # Import for database config
+import dj_database_url  # For database configuration
 from datetime import timedelta
 from dotenv import load_dotenv  # Load environment variables
 
@@ -21,51 +21,34 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'your-default-secret-key')
 # ==============================
 # 🔹 DEBUG MODE (Set False in Production)
 # ==============================
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'False') == 'True'  # Default is False
+
 # ==============================
 # 🔹 ALLOWED HOSTS
 # ==============================
-ALLOWED_HOSTS = [
-    "localhost",
-    "127.0.0.1",
-    "loan-management-1-12jv.onrender.com",
-]
-#DATABASE_URL = os.getenv('60dd8e0ac7447ff28d638a817e64fd6d')  # Make sure this is set in Render's environment variables
-
-
-#ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(' ') if not DEBUG else []
+ALLOWED_HOSTS = ["loan-management-1-12jv.onrender.com"]
 
 
 # ==============================
 # 🔹 DATABASE CONFIG (Use PostgreSQL)
 # ==============================
-#DATABASES = {
-DATABASE_URL = os.getenv('DATABASE_URL','postgresql://postgres1:Li5PeUNDdX0ByaHTqyPXHPzE1I9MQrMg@dpg-cv8q6pt2ng1s73cbngh0-a/loan_management_gm14')
+
+DATABASE_URL = os.getenv('DATABASE_URL')
+
 DATABASES = {
     'default': dj_database_url.config(
         default=DATABASE_URL,
-        conn_max_age=600 ,
-        ssl_require=False  # Ensure SSL is required for Render DB
- # Keeps database connections open for performance
+        conn_max_age=600,
+        ssl_require=True  # Ensure SSL is enabled for security on Render
     )
 }
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'loan_management1',
-#         'USER': 'postgres',
-#         'PASSWORD': 'appunni0481',
-#         'HOST': 'localhost',
-#         'PORT': '5433',  # Make sure this matches your PostgreSQL port
-#     }
-# }
 
 # ==============================
 # 🔹 STATIC FILES
 # ==============================
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-# STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # ==============================
 # 🔹 INSTALLED APPS
@@ -86,10 +69,13 @@ INSTALLED_APPS = [
     'django_otp.plugins.otp_email',
 ]
 
+# ==============================
+# 🔹 TEMPLATES CONFIGURATION (FIXED)
+# ==============================
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],  # Ensure this path exists
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -101,6 +87,7 @@ TEMPLATES = [
         },
     },
 ]
+
 # ==============================
 # 🔹 MIDDLEWARE
 # ==============================
@@ -113,7 +100,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
-
 ]
 
 # ==============================
@@ -144,7 +130,6 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
     'ALGORITHM': 'HS256',
-    #'SIGNING_KEY': SECRET_KEY,
 }
 
 # ==============================
@@ -157,8 +142,12 @@ CSRF_TRUSTED_ORIGINS = [
 # ==============================
 # 🔹 SECURITY HEADERS (Recommended)
 # ==============================
-SECURE_SSL_REDIRECT = os.getenv('SECURE_SSL_REDIRECT', 'False') == 'True'
-SESSION_COOKIE_SECURE = os.getenv('SESSION_COOKIE_SECURE', 'False') == 'True'
-CSRF_COOKIE_SECURE = os.getenv('CSRF_COOKIE_SECURE', 'False') == 'True'
-SECURE_BROWSER_XSS_FILTER = True
+SECURE_SSL_REDIRECT = True  # Force HTTPS
+SESSION_COOKIE_SECURE = True  # Secure cookies
+CSRF_COOKIE_SECURE = True  # Secure CSRF cookie
+SECURE_HSTS_SECONDS = 31536000  # Enable HTTP Strict Transport Security (HSTS)
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
+
+
